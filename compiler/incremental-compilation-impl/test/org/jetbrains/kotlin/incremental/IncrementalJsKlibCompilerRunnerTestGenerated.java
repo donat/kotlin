@@ -8,7 +8,6 @@ package org.jetbrains.kotlin.incremental;
 import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.JUnit3RunnerWithInners;
 import org.jetbrains.kotlin.test.KotlinTestUtils;
-import org.jetbrains.kotlin.test.MuteExtraSuffix;
 import org.jetbrains.kotlin.test.TestMetadata;
 import org.junit.runner.RunWith;
 
@@ -21,7 +20,6 @@ import java.util.regex.Pattern;
 public class IncrementalJsKlibCompilerRunnerTestGenerated extends AbstractIncrementalJsKlibCompilerRunnerTest {
     @TestMetadata("jps-plugin/testData/incremental/pureKotlin")
     @TestDataPath("$PROJECT_ROOT")
-    @MuteExtraSuffix(".jsklib")
     @RunWith(JUnit3RunnerWithInners.class)
     public static class PureKotlin extends AbstractIncrementalJsKlibCompilerRunnerTest {
         private void runTest(String testDataFilePath) throws Exception {
@@ -655,7 +653,6 @@ public class IncrementalJsKlibCompilerRunnerTestGenerated extends AbstractIncrem
 
     @TestMetadata("jps-plugin/testData/incremental/classHierarchyAffected")
     @TestDataPath("$PROJECT_ROOT")
-    @MuteExtraSuffix(".jsklib")
     @RunWith(JUnit3RunnerWithInners.class)
     public static class ClassHierarchyAffected extends AbstractIncrementalJsKlibCompilerRunnerTest {
         private void runTest(String testDataFilePath) throws Exception {
@@ -869,7 +866,6 @@ public class IncrementalJsKlibCompilerRunnerTestGenerated extends AbstractIncrem
 
     @TestMetadata("jps-plugin/testData/incremental/js")
     @TestDataPath("$PROJECT_ROOT")
-    @MuteExtraSuffix(".jsklib")
     @RunWith(JUnit3RunnerWithInners.class)
     public static class Js extends AbstractIncrementalJsKlibCompilerRunnerTest {
         private void runTest(String testDataFilePath) throws Exception {
@@ -887,7 +883,6 @@ public class IncrementalJsKlibCompilerRunnerTestGenerated extends AbstractIncrem
 
         @TestMetadata("jps-plugin/testData/incremental/js/friendsModuleDisabled")
         @TestDataPath("$PROJECT_ROOT")
-        @MuteExtraSuffix(".jsklib")
         @RunWith(JUnit3RunnerWithInners.class)
         public static class FriendsModuleDisabled extends AbstractIncrementalJsKlibCompilerRunnerTest {
             private void runTest(String testDataFilePath) throws Exception {
@@ -905,7 +900,6 @@ public class IncrementalJsKlibCompilerRunnerTestGenerated extends AbstractIncrem
 
             @TestMetadata("jps-plugin/testData/incremental/js/friendsModuleDisabled/internalInlineFunctionIsChanged")
             @TestDataPath("$PROJECT_ROOT")
-            @MuteExtraSuffix(".jsklib")
             @RunWith(JUnit3RunnerWithInners.class)
             public static class InternalInlineFunctionIsChanged extends AbstractIncrementalJsKlibCompilerRunnerTest {
                 private void runTest(String testDataFilePath) throws Exception {
@@ -920,7 +914,6 @@ public class IncrementalJsKlibCompilerRunnerTestGenerated extends AbstractIncrem
 
         @TestMetadata("jps-plugin/testData/incremental/js/inlineFunctionLocalDeclarationChanges")
         @TestDataPath("$PROJECT_ROOT")
-        @MuteExtraSuffix(".jsklib")
         @RunWith(JUnit3RunnerWithInners.class)
         public static class InlineFunctionLocalDeclarationChanges extends AbstractIncrementalJsKlibCompilerRunnerTest {
             private void runTest(String testDataFilePath) throws Exception {
