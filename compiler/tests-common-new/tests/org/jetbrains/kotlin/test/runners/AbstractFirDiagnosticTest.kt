@@ -8,7 +8,10 @@ package org.jetbrains.kotlin.test.runners
 import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
+import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.FIR_DUMP
+import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.USE_LIGHT_TREE
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
+import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives.WITH_STDLIB
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives
 import org.jetbrains.kotlin.test.frontend.fir.FirFailingTestSuppressor
 import org.jetbrains.kotlin.test.frontend.fir.FirFrontendFacade
@@ -45,6 +48,8 @@ abstract class AbstractFirDiagnosticTest : AbstractKotlinCompilerTest() {
             ::FirCfgConsistencyHandler,
         )
 
+        useMetaInfoProcessors(::PsiLightTreeMetaInfoProcessor)
+
         forTestsMatching("compiler/testData/diagnostics/*") {
             useAfterAnalysisCheckers(
                 ::FirIdenticalChecker,
@@ -55,7 +60,7 @@ abstract class AbstractFirDiagnosticTest : AbstractKotlinCompilerTest() {
 
         forTestsMatching("compiler/fir/analysis-tests/testData/*") {
             defaultDirectives {
-                +FirDiagnosticsDirectives.FIR_DUMP
+                +FIR_DUMP
             }
         }
 
@@ -65,7 +70,18 @@ abstract class AbstractFirDiagnosticTest : AbstractKotlinCompilerTest() {
                     "compiler/testData/diagnostics/tests/unsignedTypes/*"
         ) {
             defaultDirectives {
-                +JvmEnvironmentConfigurationDirectives.WITH_STDLIB
+                +WITH_STDLIB
+            }
+        }
+    }
+}
+
+abstract class AbstractFirDiagnosticsWithLightTreeTest : AbstractFirDiagnosticTest() {
+    override fun configure(builder: TestConfigurationBuilder) {
+        super.configure(builder)
+        with(builder) {
+            defaultDirectives {
+                +USE_LIGHT_TREE
             }
         }
     }
