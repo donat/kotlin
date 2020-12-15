@@ -1508,7 +1508,7 @@ fun main(args: Array<String>) {
             }
 
             testClass<AbstractIncrementalJsKlibCompilerRunnerTest>() {
-                model("incremental/pureKotlin", extension = null, recursive = false)
+                model("incremental/pureKotlin", extension = null, recursive = false, excludedPattern = "^sealed.*")
                 model("incremental/classHierarchyAffected", extension = null, recursive = false)
                 model("incremental/js", extension = null, excludeParentDirs = true)
             }

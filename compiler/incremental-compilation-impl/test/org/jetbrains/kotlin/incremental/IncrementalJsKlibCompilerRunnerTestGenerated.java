@@ -63,7 +63,7 @@ public class IncrementalJsKlibCompilerRunnerTestGenerated extends AbstractIncrem
         }
 
         public void testAllFilesPresentInPureKotlin() throws Exception {
-            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("jps-plugin/testData/incremental/pureKotlin"), Pattern.compile("^([^\\.]+)$"), null, false);
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("jps-plugin/testData/incremental/pureKotlin"), Pattern.compile("^([^\\.]+)$"), Pattern.compile("^sealed.*"), false);
         }
 
         @TestMetadata("annotations")
@@ -569,31 +569,6 @@ public class IncrementalJsKlibCompilerRunnerTestGenerated extends AbstractIncrem
         @TestMetadata("returnTypeChanged")
         public void testReturnTypeChanged() throws Exception {
             runTest("jps-plugin/testData/incremental/pureKotlin/returnTypeChanged/");
-        }
-
-        @TestMetadata("sealedClassesAddImplements")
-        public void testSealedClassesAddImplements() throws Exception {
-            runTest("jps-plugin/testData/incremental/pureKotlin/sealedClassesAddImplements/");
-        }
-
-        @TestMetadata("sealedClassesAddInheritor")
-        public void testSealedClassesAddInheritor() throws Exception {
-            runTest("jps-plugin/testData/incremental/pureKotlin/sealedClassesAddInheritor/");
-        }
-
-        @TestMetadata("sealedClassesRemoveImplements")
-        public void testSealedClassesRemoveImplements() throws Exception {
-            runTest("jps-plugin/testData/incremental/pureKotlin/sealedClassesRemoveImplements/");
-        }
-
-        @TestMetadata("sealedClassesRemoveInheritor")
-        public void testSealedClassesRemoveInheritor() throws Exception {
-            runTest("jps-plugin/testData/incremental/pureKotlin/sealedClassesRemoveInheritor/");
-        }
-
-        @TestMetadata("sealedClassesUseSwitch")
-        public void testSealedClassesUseSwitch() throws Exception {
-            runTest("jps-plugin/testData/incremental/pureKotlin/sealedClassesUseSwitch/");
         }
 
         @TestMetadata("secondaryConstructorInlined")
