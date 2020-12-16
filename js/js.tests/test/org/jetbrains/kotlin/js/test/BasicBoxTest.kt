@@ -112,6 +112,8 @@ abstract class BasicBoxTest(
         } catch (e: Throwable) {
             if (failFile.exists()) {
                 KotlinTestUtils.assertEqualsToFile(failFile, e.message ?: "")
+            } else {
+                throw e
             }
         }
     }
