@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.test.runners
 import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
+import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.COMPARE_WITH_LIGHT_TREE
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.FIR_DUMP
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives.USE_LIGHT_TREE
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
@@ -61,6 +62,7 @@ abstract class AbstractFirDiagnosticTest : AbstractKotlinCompilerTest() {
         forTestsMatching("compiler/fir/analysis-tests/testData/*") {
             defaultDirectives {
                 +FIR_DUMP
+                +COMPARE_WITH_LIGHT_TREE
             }
         }
 

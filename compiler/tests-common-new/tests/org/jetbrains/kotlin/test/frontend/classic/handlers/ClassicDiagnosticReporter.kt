@@ -6,9 +6,7 @@
 package org.jetbrains.kotlin.test.frontend.classic.handlers
 
 import org.jetbrains.kotlin.checkers.utils.DiagnosticsRenderingConfiguration
-import org.jetbrains.kotlin.codeMetaInfo.model.CodeMetaInfo
 import org.jetbrains.kotlin.codeMetaInfo.model.DiagnosticCodeMetaInfo
-import org.jetbrains.kotlin.codeMetaInfo.model.ParsedCodeMetaInfo
 import org.jetbrains.kotlin.config.JVMConfigurationKeys
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.diagnostics.Diagnostic
@@ -91,8 +89,8 @@ class OldNewInferenceMetaInfoProcessor(testServices: TestServices) : AbstractTwo
     override val firstAttribute: String get() = NI
     override val secondAttribute: String get() = OI
 
-    override fun processorEnabled(): Boolean {
-        return testServices.withNewInferenceModeEnabled()
+    override fun processorEnabled(module: TestModule): Boolean {
+        return DiagnosticsDirectives.WITH_NEW_INFERENCE in module.directives
     }
 
     override fun firstAttributeEnabled(module: TestModule): Boolean {

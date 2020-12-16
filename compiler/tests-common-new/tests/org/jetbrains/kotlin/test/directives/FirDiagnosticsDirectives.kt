@@ -28,4 +28,11 @@ object FirDiagnosticsDirectives : SimpleDirectivesContainer() {
     val USE_LIGHT_TREE by directive(
         description = "Enables light tree parser instead of PSI"
     )
+
+    val COMPARE_WITH_LIGHT_TREE by directive(
+        description = """
+            Enable comparing diagnostics between PSI and light tree modes
+            For enabling light tree mode use $USE_LIGHT_TREE directive
+        """.trimIndent()
+    )
 }

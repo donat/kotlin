@@ -64,6 +64,7 @@ class FirDiagnosticsHandler(testServices: TestServices) : FirAnalysisHandler(tes
 
     override fun processModule(module: TestModule, info: FirOutputArtifact) {
         val diagnosticsPerFile = info.firAnalyzerFacade.runCheckers()
+        val lightTreeComparingModeEnabled = FirDiagnosticsDirectives.COMPARE_WITH_LIGHT_TREE in module.directives
         val lightTreeEnabled = FirDiagnosticsDirectives.USE_LIGHT_TREE in module.directives
 
         for (file in module.files) {
@@ -74,30 +75,42 @@ class FirDiagnosticsHandler(testServices: TestServices) : FirAnalysisHandler(tes
                 // SYNTAX errors will be reported later
                 if (diagnostic.factory == FirErrors.SYNTAX) return@mapNotNull null
                 if (!diagnostic.isValid) return@mapNotNull null
-                diagnostic.toMetaInfo(file, lightTreeEnabled)
+                diagnostic.toMetaInfo(file, lightTreeEnabled, lightTreeComparingModeEnabled)
             }
             globalMetadataInfoHandler.addMetadataInfosForFile(file, diagnosticsMetadataInfos)
-            collectSyntaxDiagnostics(file, firFile, lightTreeEnabled)
-            collectDebugInfoDiagnostics(file, firFile, lightTreeEnabled)
+            collectSyntaxDiagnostics(file, firFile, lightTreeEnabled, lightTreeComparingModeEnabled)
+            collectDebugInfoDiagnostics(file, firFile, lightTreeEnabled, lightTreeComparingModeEnabled)
         }
     }
 
-    private fun FirDiagnostic<*>.toMetaInfo(file: TestFile, lightTreeEnabled: Boolean, forceRenderArguments: Boolean = false): FirDiagnosticCodeMetaInfo {
+    private fun FirDiagnostic<*>.toMetaInfo(
+        file: TestFile,
+        lightTreeComparingModeEnabled: Boolean,
+        lightTreeEnabled: Boolean,
+        forceRenderArguments: Boolean = false
+    ): FirDiagnosticCodeMetaInfo {
         val metaInfo = FirDiagnosticCodeMetaInfo(this, FirMetaInfoUtils.renderDiagnosticNoArgs)
         val shouldRenderArguments = forceRenderArguments || globalMetadataInfoHandler.getExistingMetaInfosForActualMetadata(file, metaInfo)
             .any { it.description != null }
         if (shouldRenderArguments) {
             metaInfo.replaceRenderConfiguration(FirMetaInfoUtils.renderDiagnosticWithArgs)
         }
-        metaInfo.attributes += if (lightTreeEnabled) PsiLightTreeMetaInfoProcessor.LT else PsiLightTreeMetaInfoProcessor.PSI
+        if (lightTreeComparingModeEnabled) {
+            metaInfo.attributes += if (lightTreeEnabled) PsiLightTreeMetaInfoProcessor.LT else PsiLightTreeMetaInfoProcessor.PSI
+        }
         return metaInfo
     }
 
-    private fun collectSyntaxDiagnostics(testFile: TestFile, firFile: FirFile, lightTreeEnabled: Boolean) {
+    private fun collectSyntaxDiagnostics(
+        testFile: TestFile,
+        firFile: FirFile,
+        lightTreeEnabled: Boolean,
+        lightTreeComparingModeEnabled: Boolean
+    ) {
         // TODO: support in light tree
         val psiFile = firFile.psi ?: return
         val metaInfos = AnalyzingUtils.getSyntaxErrorRanges(psiFile).map {
-            FirErrors.SYNTAX.on(FirRealPsiSourceElement(it)).toMetaInfo(testFile, lightTreeEnabled)
+            FirErrors.SYNTAX.on(FirRealPsiSourceElement(it)).toMetaInfo(testFile, lightTreeEnabled, lightTreeComparingModeEnabled)
         }
         globalMetadataInfoHandler.addMetadataInfosForFile(testFile, metaInfos)
     }
@@ -105,7 +118,8 @@ class FirDiagnosticsHandler(testServices: TestServices) : FirAnalysisHandler(tes
     private fun collectDebugInfoDiagnostics(
         testFile: TestFile,
         firFile: FirFile,
-        lightTreeEnabled: Boolean
+        lightTreeEnabled: Boolean,
+        lightTreeComparingModeEnabled: Boolean
     ) {
         val result = mutableListOf<FirDiagnostic<*>>()
         val diagnosedRangesToDiagnosticNames = globalMetadataInfoHandler.getExistingMetaInfosForFile(testFile).groupBy(
@@ -135,7 +149,7 @@ class FirDiagnosticsHandler(testServices: TestServices) : FirAnalysisHandler(tes
         }.let(firFile::accept)
         globalMetadataInfoHandler.addMetadataInfosForFile(
             testFile,
-            result.map { it.toMetaInfo(testFile, lightTreeEnabled, forceRenderArguments = true) }
+            result.map { it.toMetaInfo(testFile, lightTreeEnabled, lightTreeComparingModeEnabled, forceRenderArguments = true) }
         )
     }
 
@@ -248,8 +262,8 @@ class PsiLightTreeMetaInfoProcessor(testServices: TestServices) : AbstractTwoAtt
     override val firstAttribute: String get() = PSI
     override val secondAttribute: String get() = LT
 
-    override fun processorEnabled(): Boolean {
-        return true
+    override fun processorEnabled(module: TestModule): Boolean {
+        return FirDiagnosticsDirectives.COMPARE_WITH_LIGHT_TREE in module.directives
     }
 
     override fun firstAttributeEnabled(module: TestModule): Boolean {

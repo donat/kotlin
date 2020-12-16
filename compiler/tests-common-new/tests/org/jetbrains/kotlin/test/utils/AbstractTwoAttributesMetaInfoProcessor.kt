@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.test.utils
 
 import org.jetbrains.kotlin.codeMetaInfo.model.CodeMetaInfo
 import org.jetbrains.kotlin.codeMetaInfo.model.ParsedCodeMetaInfo
-import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.test.model.TestFile
 import org.jetbrains.kotlin.test.model.TestModule
 import org.jetbrains.kotlin.test.services.AdditionalMetaInfoProcessor
@@ -17,7 +16,7 @@ abstract class AbstractTwoAttributesMetaInfoProcessor(testServices: TestServices
     protected abstract val firstAttribute: String
     protected abstract val secondAttribute: String
 
-    protected abstract fun processorEnabled(): Boolean
+    protected abstract fun processorEnabled(module: TestModule): Boolean
     protected abstract fun firstAttributeEnabled(module: TestModule): Boolean
 
     override fun processMetaInfos(module: TestModule, file: TestFile) {
@@ -33,7 +32,7 @@ abstract class AbstractTwoAttributesMetaInfoProcessor(testServices: TestServices
          * └──────────┴───────┴────────┴──────────┘
          *       ^ existed
          */
-        if (!processorEnabled()) return
+        if (!processorEnabled(module)) return
         val (currentFlag, otherFlag) = when (firstAttributeEnabled(module)) {
             true -> firstAttribute to secondAttribute
             false -> secondAttribute to firstAttribute
