@@ -107,17 +107,12 @@ abstract class BasicBoxTest(
 
     fun doTestWithIgnoringByFailFile(filePath: String, coroutinesPackage: String) {
         val failFile = File("$filePath.fail")
-        var thereWasAnError = false
         try {
             doTest(filePath, "OK", MainCallParameters.noCall(), coroutinesPackage)
         } catch (e: Throwable) {
             if (failFile.exists()) {
-                thereWasAnError = true
                 KotlinTestUtils.assertEqualsToFile(failFile, e.message ?: "")
             }
-        }
-        if (!thereWasAnError) {
-            assertFalse("Test passed but fail file exists. Please remove ${failFile.path}", failFile.exists())
         }
     }
 
