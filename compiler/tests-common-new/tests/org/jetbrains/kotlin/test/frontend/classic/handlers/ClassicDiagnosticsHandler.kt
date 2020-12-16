@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.resolve.AnalyzingUtils
 import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowValueFactoryImpl
 import org.jetbrains.kotlin.test.directives.AdditionalFilesDirectives
 import org.jetbrains.kotlin.test.directives.DiagnosticsDirectives
+import org.jetbrains.kotlin.test.directives.DiagnosticsDirectives.MARK_DYNAMIC_CALLS
 import org.jetbrains.kotlin.test.directives.DiagnosticsDirectives.REPORT_JVM_DIAGNOSTICS_ON_FRONTEND
 import org.jetbrains.kotlin.test.directives.LanguageSettingsDirectives
 import org.jetbrains.kotlin.test.directives.model.DirectivesContainer
@@ -111,7 +112,7 @@ class ClassicDiagnosticsHandler(testServices: TestServices) : ClassicFrontendAna
         val debugAnnotations = CheckerTestUtil.getDebugInfoDiagnostics(
             ktFile,
             info.analysisResult.bindingContext,
-            markDynamicCalls = false,
+            markDynamicCalls = MARK_DYNAMIC_CALLS in module.directives,
             dynamicCallDescriptors = mutableListOf(),
             configuration,
             dataFlowValueFactory = DataFlowValueFactoryImpl(info.languageVersionSettings),

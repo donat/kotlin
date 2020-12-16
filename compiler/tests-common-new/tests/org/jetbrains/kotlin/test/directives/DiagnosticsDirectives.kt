@@ -49,4 +49,10 @@ object DiagnosticsDirectives : SimpleDirectivesContainer() {
               is enabled in test 
         """.trimIndent()
     )
+
+    val MARK_DYNAMIC_CALLS by directive(
+        description = """
+            Render debug info about dynamic calls
+        """.trimIndent()
+    )
 }
